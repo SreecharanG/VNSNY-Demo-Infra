@@ -2,6 +2,8 @@
 
 ## To Attach Access keys and secret keys use ENVIRONMENT variables (its kind of best practice)
 
+### Reference Notes.
+
 > Download the Access keys from the Management console. 
 
 `export TF_VAR_access=<provide-access-value-here>`
