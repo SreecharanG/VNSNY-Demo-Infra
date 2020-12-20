@@ -30,7 +30,7 @@ variable "api_key_source" {
     description = "The source of API key for requests, valid values are HEADER(default) and AUTHORIZER"
 }
 
-variable "type" {
+variable "types" {
     type = list
     default = ["EDGE"]
     description = "Whether to create REST api"
@@ -42,6 +42,25 @@ variable "path_parts" {
     type = list
     default = ["GetMySchedule"]
     description = "The last path segment of this API resource"
+}
+
+# Variables for "aws_api_gateway_model"
+variable "api_model_name" {
+    type = string
+    default = "user"
+    description = "Description model"
+}
+
+variable "model_count" {
+    type = number
+    default = 0
+    description = "Number of model"
+}
+
+variable "content_types" {
+    type = list
+    default = ["application/json"]
+    description = "API Model method schema. Default JSON schema"
 }
 
 

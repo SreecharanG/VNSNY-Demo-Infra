@@ -22,7 +22,6 @@ resource "aws_api_gateway_rest_api" "default" {
   count = var.enabled ? 1 : 0
 
   name                     = var.name
-  description              = var.description
   binary_media_types       = var.binary_media_types
   minimum_compression_size = var.minimum_compression_size
   api_key_source           = var.api_key_source
@@ -40,3 +39,16 @@ resource "aws_api_gateway_resource" "default" {
   parent_id   = aws_api_gateway_rest_api.default.*.root_resource_id[0]
   path_part   = element(var.path_parts, count.index)
 }
+
+# API Gateway Model -- Terraform model to create API Gateway model 
+resource "aws_api_gateway_model" "default" {
+  count        = var.model_count > 0 ? var.model_count : 0
+  rest_api_id  = aws_api_gateway_rest_api.default.*.id[0]
+  name         = var.api_model_name
+  content_type = element(var.content_types, count.index)
+
+  schema = <<EOF
+{"type":"object"}
+EOF
+}
+
