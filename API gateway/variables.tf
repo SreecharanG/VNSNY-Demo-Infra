@@ -1,3 +1,4 @@
+
 variable "enabled" {
   type = bool
   default = true
@@ -44,5 +45,12 @@ variable "path_parts" {
 }
 
 
+# variables accesskeys 
 
+variable "accesskeys" {
+  type = string
+}
+variable "secretkeys" {
+  type = string
+}
 
