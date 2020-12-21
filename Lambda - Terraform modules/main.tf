@@ -1,32 +1,51 @@
 
+# Terraform module to create Iam role on AWS for Lambda
+data aws_iam_policy_document assume_role {
+  statement {
+    actions = ["sts:AssumeRole"]
 
-
-
-
-module "lambda-basic-execution-role" {
-  source  = "amancevice/lambda-basic-execution-role/aws"
-  version = "0.1.0"
-  # insert the 1 required variable here
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
 }
 
-# Terraform module to create Iam role on AWS for Lambda
-resource "aws_iam_role" "default" {
-  count = var.enabled ? 1 : 0
-  name  = format("%s-role", module.labels.id)
+resource "aws_iam_role" "role" {
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  name = var.name
+}
 
-  assume_role_policy = <<EOF
+resource "aws_iam_role_policy_attachment" "basic"{
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role = aws_iam_role.role.name
+}
+
+resource "aws_iam_policy" "inline" {
+  name        = var.inline_policy_name
+  path        = "/"
+  description = "My test policy"
+
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
+      "Sid": "Stmt1608504429748",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem"
+      ],
       "Effect": "Allow",
-      "Sid": ""
+      "Resource": "arn:aws:dynamodb:us-east-1:869588908060:table/VNSNY-DynamoDB-Table"
     }
   ]
 }
 EOF
 }
+
+resource "aws_iam_role_policy_attachment" "additional" {
+  policy_arn = aws_iam_policy.inline.arn
+  role       = aws_iam_role.role.name
+}
+
