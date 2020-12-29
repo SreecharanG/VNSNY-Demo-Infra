@@ -1,4 +1,23 @@
 
+# Passing Creds. 
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
+
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+  access_key = var.accesskeys
+  secret_key= var.secretkeys
+}
+
+
 # Terraform module to create Iam role on AWS for Lambda
 data aws_iam_policy_document assume_role {
   statement {
@@ -37,7 +56,7 @@ resource "aws_iam_policy" "inline" {
         "dynamodb:PutItem"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:dynamodb:us-east-1:869588908060:table/VNSNY-DynamoDB-Table"
+      "Resource": "arn:aws:dynamodb:us-east-1:869588908060:table/VNSNY-DynamoDB-Table-1"
     }
   ]
 }

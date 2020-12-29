@@ -7,25 +7,25 @@ variable "create_table" {
 variable "name" {
   description = "Name of the DynamoDB table"
   type        = string
-  default     = "VNSNY-DynamoDB-Table"
+  default     = "VNSNY-DynamoDB-Table-1"
 }
 
 variable "billing_mode" {
   description = "Controls how you are billed for read/write throughput and how you manage capacity. The valid values are PROVISIONED or PAY_PER_REQUEST"
   type        = string
-  default     = "PAY_PER_REQUEST"
+  default     = "PROVISIONED"
 }
 
 variable "hash_key" {
   description = "The attribute to use as the hash (partition) key. Must also be defined as an attribute"
   type        = string
-  default     = "Id"
+  default     = "homeTeam"
 }
 
 variable "range_key" {
   description = "The attribute to use as the hash (partition) key. Must also be defined as an attribute"
   type        = string
-  default     = "Name"
+  default     = "eventDate"
 }
 
 variable "read_capacity" {
@@ -69,12 +69,12 @@ variable "attributes" {
   type        = list(map(string))
   default     = [
       {
-          name = "Id"
-          type = "N"
+          name = "homeTeam"
+          type = "S"
       },
       {
-          name = "Name"
-          type = "S"
+          name = "eventDate"
+          type = "N"
       }
   ]
 }
@@ -82,10 +82,10 @@ variable "local_secondary_indexes" {
   description = "Describe an LSI on the table; these can only be allocated at creation so you cannot change this definition after you have created the resource."
   type        = any
   default     = [{
-      name = "Name"
-      range_key = "Name"
-      projection_type = "INCLUDE"
-      non_key_attributes = ["Id"]
+      name = "lambda"
+      range_key = "eventDate"
+      projection_type = "KEYS_ONLY"
+      non_key_attributes = []
   }]
 }
 variable "timeouts" {
